@@ -1,0 +1,57 @@
+#!/bin/bash
+ 
+[ -f /etc/pkuipgw.conf ] && . /etc/pkuipgw.conf
+[ -z "$USERNAME" ] && read -p "Please enter your username: " USERNAME
+[ -z "$PASSWORD" ] && read -s -p "Please enter your password: " PASSWORD
+ 
+URL="https://its.pku.edu.cn:5428/ipgatewayofpku?timeout=1"
+ 
+connect (){
+	RESULT=$(lynx -dump "${URL}&uid=${USERNAME}&password=${PASSWORD}&range=2&operation=connect" \
+		2>/dev/null | iconv -f gbk -t utf8)
+	echo "$RESULT"
+	echo "$RESULT"|grep "Connect successfully" >/dev/null
+}
+ 
+disconnect (){
+	RESULT=$(lynx -dump "${URL}&uid=${USERNAME}&password=${PASSWORD}&range=2&operation=disconnect" \
+		2>/dev/null | iconv -f gbk -t utf8)
+	echo "$RESULT"
+	echo "$RESULT"|grep "Disconnect Succeeded" >/dev/null
+}
+ 
+connect_global (){
+	RESULT=$(lynx -dump "${URL}&uid=${USERNAME}&password=${PASSWORD}&range=1&operation=connect" \
+		2>/dev/null | iconv -f gbk -t utf8)
+	echo "$RESULT"
+	echo "$RESULT"|grep "Connect successfully" >/dev/null
+}
+ 
+disconnect_all (){
+	RESULT=$(lynx -dump "${URL}&uid=${USERNAME}&password=${PASSWORD}&range=2&operation=disconnectall" \
+		2>/dev/null | iconv -f gbk -t utf8)
+	echo "$RESULT"
+	echo "$RESULT"|grep "Disconnect All Succeeded" >/dev/null
+}
+ 
+if [[ -z "$1" ]]
+then
+	connect && exit 0
+	disconnect_all || exit 1
+	connect || exit 1
+else
+	if [[ "$1" == "g" ]]
+	then
+		connect_global && exit 0
+		disconnect_all || exit 1
+		connect_global || exit 1
+	elif [[ "$1" == "d" ]]
+	then
+		disconnect && exit 0
+	elif [[ "$1" == "da" ]]
+	then
+		disconnect_all && exit 0
+	else
+		exit 1
+	fi
+fi
