@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/env bash
  
 [ -f /etc/pkuipgw.conf ] && . /etc/pkuipgw.conf
 [ -z "$USERNAME" ] && read -p "Please enter your username: " USERNAME
