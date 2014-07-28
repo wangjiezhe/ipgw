@@ -1,4 +1,4 @@
-# /etc/pkuipgw.conf
+# /etc/pkuipgwrc
 # Configuration for /usr/bin/ipgw
 USERNAME=1234567890
 PASSWORD=0987654321

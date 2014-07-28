@@ -1,6 +1,15 @@
-#!/bin/env bash
- 
-[ -f /etc/pkuipgw.conf ] && . /etc/pkuipgw.conf
+#!/bin/bash
+
+set -o nounset
+
+if [ -f ~/.pkuipgwrc ]
+then
+	source ~/.pkuipgwrc
+elif [ -f /etc/pkuipgwrc ]
+then
+	source /etc/pkuipgwrc
+fi
+
 [ -z "$USERNAME" ] && read -p "Please enter your username: " USERNAME
 [ -z "$PASSWORD" ] && read -s -p "Please enter your password: " PASSWORD
  
@@ -33,25 +42,40 @@ disconnect_all (){
 	echo "$RESULT"
 	echo "$RESULT"|grep "Disconnect All Succeeded" >/dev/null
 }
- 
-if [[ -z "$1" ]]
+
+error() {
+	echo "Usage: $(basename "$0") [g|d|da|r]"
+	exit 2
+}
+
+
+if [ $# -eq 0 ]
 then
 	connect && exit 0
 	disconnect_all || exit 1
 	connect || exit 1
+elif [ $# -eq 1 ]
+then
+	case $1 in
+		g)
+			connect_global && exit 0
+			disconnect_all || exit 1
+			connect_global || exit 1
+			;;
+		d)
+			disconnect || exit 1
+			;;
+		da)
+			disconnect_all || exit 1
+			;;
+		r)
+			disconnect_all || exit 1
+			connect || exit 1
+			;;
+		*)
+			error
+			;;
+	esac
 else
-	if [[ "$1" == "g" ]]
-	then
-		connect_global && exit 0
-		disconnect_all || exit 1
-		connect_global || exit 1
-	elif [[ "$1" == "d" ]]
-	then
-		disconnect && exit 0
-	elif [[ "$1" == "da" ]]
-	then
-		disconnect_all && exit 0
-	else
-		exit 1
-	fi
+	error
 fi
