@@ -10,35 +10,35 @@ then
 	source /etc/pkuipgwrc
 fi
 
-[ -z "$USERNAME" ] && read -p "Please enter your username: " USERNAME
-[ -z "$PASSWORD" ] && read -s -p "Please enter your password: " PASSWORD
- 
+[[ -z "$username" ]] && read -p "Please enter your username: " username
+[[ -z "$password" ]] && read -s -p "Please enter your password: " password
+
 URL="https://its.pku.edu.cn:5428/ipgatewayofpku?timeout=1"
- 
-connect (){
-	RESULT=$(lynx -dump "${URL}&uid=${USERNAME}&password=${PASSWORD}&range=2&operation=connect" \
-		2>/dev/null | iconv -f gbk -t utf8)
+
+connect() {
+	RESULT=$(w3m -dump -o ssl_verify_server=false \
+		"${URL}&uid=${username}&password=${password}&range=2&operation=connect" 2>/dev/null | uniq)
 	echo "$RESULT"
 	echo "$RESULT"|grep "Connect successfully" >/dev/null
 }
- 
-disconnect (){
-	RESULT=$(lynx -dump "${URL}&uid=${USERNAME}&password=${PASSWORD}&range=2&operation=disconnect" \
-		2>/dev/null | iconv -f gbk -t utf8)
+
+disconnect() {
+	RESULT=$(w3m -dump -o ssl_verify_server=false \
+		"${URL}&uid=${username}&password=${password}&range=2&operation=disconnect" 2>/dev/null | uniq)
 	echo "$RESULT"
 	echo "$RESULT"|grep "Disconnect Succeeded" >/dev/null
 }
- 
-connect_global (){
-	RESULT=$(lynx -dump "${URL}&uid=${USERNAME}&password=${PASSWORD}&range=1&operation=connect" \
-		2>/dev/null | iconv -f gbk -t utf8)
+
+connect_global() {
+	RESULT=$(w3m -dump -o ssl_verify_server=false \
+		"${URL}&uid=${username}&password=${password}&range=1&operation=connect" 2>/dev/null | uniq)
 	echo "$RESULT"
 	echo "$RESULT"|grep "Connect successfully" >/dev/null
 }
- 
-disconnect_all (){
-	RESULT=$(lynx -dump "${URL}&uid=${USERNAME}&password=${PASSWORD}&range=2&operation=disconnectall" \
-		2>/dev/null | iconv -f gbk -t utf8)
+
+disconnect_all() {
+	RESULT=$(w3m -dump -o ssl_verify_server=false \
+		"${URL}&uid=${username}&password=${password}&range=2&operation=disconnectall" 2>/dev/null | uniq)
 	echo "$RESULT"
 	echo "$RESULT"|grep "Disconnect All Succeeded" >/dev/null
 }
