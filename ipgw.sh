@@ -16,29 +16,25 @@ fi
 URL="https://its.pku.edu.cn:5428/ipgatewayofpku?timeout=1"
 
 connect() {
-	RESULT=$(w3m -dump -o ssl_verify_server=false \
-		"${URL}&uid=${username}&password=${password}&range=2&operation=connect" 2>/dev/null | uniq)
+	RESULT=$(w3m -dump "${URL}&uid=${username}&password=${password}&range=2&operation=connect" 2>/dev/null | uniq)
 	echo "$RESULT"
 	echo "$RESULT"|grep "Connect successfully" >/dev/null
 }
 
 disconnect() {
-	RESULT=$(w3m -dump -o ssl_verify_server=false \
-		"${URL}&uid=${username}&password=${password}&range=2&operation=disconnect" 2>/dev/null | uniq)
+	RESULT=$(w3m -dump "${URL}&uid=${username}&password=${password}&range=2&operation=disconnect" 2>/dev/null | uniq)
 	echo "$RESULT"
 	echo "$RESULT"|grep "Disconnect Succeeded" >/dev/null
 }
 
 connect_global() {
-	RESULT=$(w3m -dump -o ssl_verify_server=false \
-		"${URL}&uid=${username}&password=${password}&range=1&operation=connect" 2>/dev/null | uniq)
+	RESULT=$(w3m -dump "${URL}&uid=${username}&password=${password}&range=1&operation=connect" 2>/dev/null | uniq)
 	echo "$RESULT"
 	echo "$RESULT"|grep "Connect successfully" >/dev/null
 }
 
 disconnect_all() {
-	RESULT=$(w3m -dump -o ssl_verify_server=false \
-		"${URL}&uid=${username}&password=${password}&range=2&operation=disconnectall" 2>/dev/null | uniq)
+	RESULT=$(w3m -dump "${URL}&uid=${username}&password=${password}&range=2&operation=disconnectall" 2>/dev/null | uniq)
 	echo "$RESULT"
 	echo "$RESULT"|grep "Disconnect All Succeeded" >/dev/null
 }
