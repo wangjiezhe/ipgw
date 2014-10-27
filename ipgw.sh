@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-
-set -o nounset
+set -e
 
 if [ -f ~/.pkuipgwrc ]
 then
