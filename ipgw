@@ -39,11 +39,14 @@ disconnect_all() {
 }
 
 show() {
-	cURL "cmd=getconnections&username=$username&password=$password" | jq .
+	cURL "cmd=getconnections&username=$username&password=$password" | jq ".succ" \
+		| tr -d '"' | tr ';' ' ' | xargs -n5 \
+		| sed -e 's/\(\S*\)/\x1b[1;36m\1\x1b[m/'
 }
 
 kick() {
-	cURL "cmd=getconnections&username=$username&password=$password" | jq .
+	show
+	echo
 	read -p "Please enter the ip that you want to kick: " ip
 	cURL "cmd=disconnect&ip=$ip&username=$username&password=$password" | jq .
 }
