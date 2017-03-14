@@ -38,8 +38,18 @@ disconnect_all() {
 	cURL "cmd=closeall&username=$username&password=$password" | jq .
 }
 
+show() {
+	cURL "cmd=getconnections&username=$username&password=$password" | jq .
+}
+
+kick() {
+	cURL "cmd=getconnections&username=$username&password=$password" | jq .
+	read -p "Please enter the ip that you want to kick: " ip
+	cURL "cmd=disconnect&ip=$ip&username=$username&password=$password" | jq .
+}
+
 error() {
-	echo "Usage: $(basename "$0") [g|d|da|r|ra]"
+	echo "Usage: $(basename "$0") [g|d|da|r|ra|s|k]"
 	exit 2
 }
 
@@ -70,6 +80,12 @@ then
 		ra)
 			disconnect_all || exit 1
 			connect || exit 1
+			;;
+		s)
+			show
+			;;
+		k)
+			kick
 			;;
 		*)
 			error
