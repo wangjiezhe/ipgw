@@ -19,7 +19,7 @@ fi
 
 cURL() {
 	curl -A "IPGWLinux1.0_Linux_00_00_de_ad_be_ef" -sS \
-		"https://its.pku.edu.cn/cas/ITSClient" -d "$@"
+		"https://its.pku.edu.cn/cas/ITSClient" -d "$1"
 }
 
 connect() {
@@ -59,9 +59,7 @@ error() {
 
 if [ $# -eq 0 ]
 then
-	connect && exit 0
-	# disconnect_all || exit 1
-	# connect || exit 1
+	connect || exit 1
 elif [ $# -eq 1 ]
 then
 	case $1 in
