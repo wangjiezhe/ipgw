@@ -22,6 +22,10 @@ cURL() {
         "https://its.pku.edu.cn/cas/ITSClient" -d "$1"
 }
 
+valid_ip() {
+    perl -MRegexp::Common=net -e 'exit(shift() !~ /^$RE{net}{IPv4}$/)' "$1"
+}
+
 connect() {
     cURL "cmd=open&username=$username&password=$password&iprange=free" | jq .
 }
@@ -48,7 +52,8 @@ kick() {
     show
     echo
     read -p "Please enter the ip that you want to kick: " ip
-    cURL "cmd=disconnect&ip=$ip&username=$username&password=$password" | jq .
+    valid_ip ${ip} && \
+        cURL "cmd=disconnect&ip=$ip&username=$username&password=$password" | jq .
 }
 
 error() {
